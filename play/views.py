@@ -6,8 +6,8 @@ from django.shortcuts import render
 from .models import Play
 
 
-def graph(request):
-    return render(request, 'graph/graph.html')
+def treemap(request):
+    return render(request, 'layout/treemap.html')
 
 
 def play_count_by_month(request):

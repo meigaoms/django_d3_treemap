@@ -1,0 +1,19 @@
+html, body { margin:0; padding:0; overflow:hidden }
+    /* .pointer {
+        float: left;
+        top: -30;
+        right: 0;
+        z-index: 1;
+    } */
+    /* .options {
+        float: right;
+        top: 0;
+        right: 0;
+        z-index: 1;
+    } */
+
+    svg { position:fixed; top:15%; left:0; height:80%; width:100% }
+    .temp {
+        pointer-events: none;
+        opacity: 0;
+    }
