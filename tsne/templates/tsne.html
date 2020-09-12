@@ -1,0 +1,24 @@
+{%  extends 'base.html' %}
+{% load static %}
+{% block content %}
+    {% load plotly_dash %}
+    <div style="position:fixed; top:15%; left:100; right: 10">
+    {% plotly_app name='tsne' ratio=0.45 %}
+    </div>
+
+{% endblock %}
+<!-- <div class="{% plotly_class name='tsne' %}" svg { position:fixed; top:15%; left:0; height:80%; width:100% }> -->
+
+
+<!-- templates/base.html -->
+<!-- <!DOCTYPE html>
+<html>
+    <head>
+    {% load plotly_dash%}
+    {% plotly_header %}
+    </head>
+    <body>
+        {%plotly_direct name="tsne"%}
+    </body>
+    {% plotly_footer %}
+</html> -->

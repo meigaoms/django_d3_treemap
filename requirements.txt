@@ -1,2 +1,12 @@
-Django
+dash
+dash-bootstrap-components
+Django==3.1.1
 django-fontawesome-5==1.0.18
+django-plotly-dash
+numpy
+gunicorn
+scikit-learn
+scipy
+pandas
+pillow
+django-bootstrap4

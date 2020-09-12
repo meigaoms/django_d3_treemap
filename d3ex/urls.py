@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.urls import path
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('play.urls'))
+    url(r'^', include('synset.urls')),
+    url(r'^tsne/', include('tsne.urls')),
+    path('django_plotly_dash/', include('django_plotly_dash.urls')),
 ]

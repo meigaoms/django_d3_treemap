@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+
+
+<svg class="treemap"></svg>
+<svg class="temp"></svg>
+
+<script src="https://d3js.org/d3.v6.js"></script>
+<script src="{% static 'js/zoomable_treemap.js' %}"></script>
+{% load static %}
+
+{% endblock content %}
+

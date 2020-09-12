@@ -1,2 +1,3 @@
 *.pyc
 *.sqlite3
+tsne/dash_apps/demo_embeddings*

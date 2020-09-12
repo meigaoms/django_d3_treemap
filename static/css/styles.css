@@ -1,4 +1,4 @@
-html, body { margin:0; padding:0; overflow:hidden }
+/* html, body { margin:0; padding:0; overflow:hidden } */
     /* .pointer {
         float: left;
         top: -30;
@@ -12,8 +12,9 @@ html, body { margin:0; padding:0; overflow:hidden }
         z-index: 1;
     } */
 
-    svg { position:fixed; top:15%; left:0; height:80%; width:100% }
-    .temp {
-        pointer-events: none;
-        opacity: 0;
-    }
+svg { position:fixed; top:15%; left:0; height:80%; width:100% }
+.temp {
+    pointer-events: none;
+    opacity: 0;
+}
+
