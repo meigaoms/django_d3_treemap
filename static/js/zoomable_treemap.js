@@ -5,7 +5,7 @@ const x = d3.scaleLinear().rangeRound([0, width]);
 const y = d3.scaleLinear().rangeRound([0, height]);
 
 
-const filePath = '/static/synset_hierarchy.json';
+const filePath = '/static/synset_hierarchy_v1.json';
 const animationSpeed = 5;
 
 // let data;
@@ -52,101 +52,79 @@ let group = svg.append("g")
 function render(group, root) {
     if (root.children) {
       var data = root.children.concat(root);
-      const node = group
-      .selectAll("g")
-      .data(data)
-      .join("g");
+    }
+    else{
+      var data = [root]
+    }
+    const node = group
+        .selectAll("g")
+        .data(data)
+        .join("g");
 
-      node.attr("cursor", "pointer")
-          .on("click", (event, d) => d === root ? zoomout(root) : zoomin(d))
+    if (root.children){
+        node.attr("cursor", "pointer")
+            .on("click", (event, d) => d === root ? zoomout(root) : zoomin(d))
+    }
+    else{
+        node.attr("cursor", "pointer")
+        .on("click", (event, d) => zoomout(root))
+    }
 
-      node.append("title")
-          .text(d => `${namemap(d)}\n${format(d.value)}`);
+    node.append("title")
+        .text(d => `${namemap(d)}\n${format(d.value)}`);
 
-      node.append("rect")
-          .attr("id", d => (d.leafUid = uuidv4()).id)
-          .attr("fill", d => d === root ? "rgb(105, 201, 129)" : d.children ? "rgb(148, 220, 121)" : "rgb(197, 236, 113)")
-          .attr("stroke", "#fff");
+    node.append("rect")
+        .attr("id", d => (d.leafUid = uuidv4()).id)
+        .attr("fill", d => d === root ? "rgb(105, 201, 129)" : d.children ? "rgb(148, 220, 121)" : "rgb(197, 236, 113)")
+        .attr("stroke", "#fff");
+    
+    if (!root.children){
+        node.append("rect")
+            .attr("id", "leaf")
+            .attr("x", 0)
+            .attr("y", 30)
+            .attr("width", width)
+            .attr("height", height)
+            .attr("fill", "rgb(197, 236, 113)");
+    }
 
-      node.append("clipPath")
-          .attr("id", d => (d.clipUid = uuidv4()).id)
-          .append("use")
-          .attr("xlink:href", d => d.leafUid.href);
+    node.append("clipPath")
+        .attr("id", d => (d.clipUid = uuidv4()).id)
+        .append("use")
+        .attr("xlink:href", d => d.leafUid.href);
 
-      node.append("text")
-          .attr("clip-path", d => d.clipUid)
-          .attr("font-weight", d => d === root ? "bold" : null)
-          .attr("font-size", d => d === root? "20px": "14px")
-          .selectAll("tspan")
-          .data(d => d === root ? namemap(d).concat(" ",format(d.value)).split(/(?=[A-Z][^A-Z])/g) : d.data.name.split(/(?=[A-Z][^A-Z])/g).concat(format(d.value)))
-          .join("tspan")
-          .attr("x", 3)
-          .attr("y", (d, i, nodes) => i === nodes.length - 1 ? `${(i === nodes.length - 1) * 0.3 + 0.8 + i * 0.9}em`:`${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
-          .attr("fill-opacity", (d, i, nodes) => i === nodes.length - 1 ? 0.7 : null)
-          .attr("font-weight", (d, i, nodes) => i === nodes.length - 1 ? "normal" : null)
-          .text(d => d);
+    node.append("text")
+        .attr("clip-path", d => d.clipUid)
+        .attr("font-weight", d => d === root ? "bold" : null)
+        .attr("font-size", d => d === root? "20px": "14px")
+        .selectAll("tspan")
+        .data(d => d === root ? namemap(d).concat(" ",format(d.value)).split(/(?=[A-Z][^A-Z])/g) : d.data.name.split(/(?=[A-Z][^A-Z])/g).concat(format(d.value)))
+        .join("tspan")
+        .attr("x", 3)
+        .attr("y", (d, i, nodes) => i === nodes.length - 1 ? `${(i === nodes.length - 1) * 0.3 + 0.8 + i * 0.9}em`:`${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
+        .attr("fill-opacity", (d, i, nodes) => i === nodes.length - 1 ? 0.7 : null)
+        .attr("font-weight", (d, i, nodes) => i === nodes.length - 1 ? "normal" : null)
+        .text(d => d);
 
-      // Add image to leaf
+      // Add image to leaf on parent level
+    if (root.children){
       node.filter(d => !d.children && x(d.x1)-x(d.x0) > 10 && y(d.y1)-y(d.y0) > 50)
           .append("svg:image")
           .attr('x', 5)
           .attr('y', 20)
           .attr('width', d=>x(d.x1)-x(d.x0)-10)
           .attr('height', d=>y(d.y1)-y(d.y0)-20)
-          .attr("xlink:href", "/static/doggie.jpeg");
+          .attr("xlink:href", "https://images.theconversation.com/files/242298/original/file-20181025-71032-1hmrk2l.jpg?ixlib=rb-1.1.0&rect=0%2C584%2C5007%2C2503&q=45&auto=format&w=1356&h=668&fit=crop");
     }
+    // Add image to leaf on a single page
     else{
-      var data = [root]
-      const node = group
-          .selectAll("g")
-          .data(data)
-          .join("g");
-      node.attr("cursor", "pointer")
-        .on("click", (event, d) => zoomout(root))
-
-      node.append("title")
-          .text(d => `${namemap(d)}\n${format(d.value)}`);
-
-      node.append("rect")
-          .attr("id", d => (d.leafUid = uuidv4()).id)
-          .attr("fill", d => d === root ? "rgb(105, 201, 129)" : d.children ? "rgb(148, 220, 121)" : "rgb(197, 236, 113)")
-          .attr("stroke", "#fff");
-
-      node.append("rect")
-          .attr("id", "leaf")
-          .attr("x", 0)
-          .attr("y", 30)
-          .attr("width", width)
-          .attr("height", height)
-          .attr("fill", "rgb(197, 236, 113)");
-
-      node.append("clipPath")
-          .attr("id", d => (d.clipUid = uuidv4()).id)
-          .append("use")
-          .attr("xlink:href", d => d.leafUid.href);
-
-      node.append("text")
-          .attr("clip-path", d => d.clipUid)
-          .attr("font-weight", d => d === root ? "bold" : null)
-          .attr("font-size", d => d === root? "20px": "14px")
-          .selectAll("tspan")
-          .data(d => d === root ? namemap(d).concat(" ",format(d.value)).split(/(?=[A-Z][^A-Z])/g) : d.data.name.split(/(?=[A-Z][^A-Z])/g).concat(format(d.value)))
-          .join("tspan")
-          .attr("x", 3)
-          .attr("y", (d, i, nodes) => i === nodes.length - 1 ? `${(i === nodes.length - 1) * 0.3 + 0.8 + i * 0.9}em`:`${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
-          .attr("fill-opacity", (d, i, nodes) => i === nodes.length - 1 ? 0.7 : null)
-          .attr("font-weight", (d, i, nodes) => i === nodes.length - 1 ? "normal" : null)
-          .text(d => d);
-
-      // Add image to leaf
       node.append("svg:image")
-          .attr('x', 0)
-          .attr('y', 30)
-          .attr('width', x)
-          .attr('height', y)
-          .attr("xlink:href", "/static/doggie.jpeg")
+      .attr('x', 0)
+      .attr('y', 30)
+      .attr('width', x)
+      .attr('height', y)
+      .attr("xlink:href", "https://images.theconversation.com/files/242298/original/file-20181025-71032-1hmrk2l.jpg?ixlib=rb-1.1.0&rect=0%2C584%2C5007%2C2503&q=45&auto=format&w=1356&h=668&fit=crop")
     }
-
     group.call(position, root);
   }
   
@@ -160,11 +138,11 @@ function render(group, root) {
 
   // When zooming in, draw the new nodes on top, and fade them in.
   function zoomin(d) {
-    const group0 = group.attr("pointer-events", "none");
-    const group1 = group = svg.append("g").call(render, d);
-
     x.domain([d.x0, d.x1]);
     y.domain([d.y0, d.y1]);
+
+    const group0 = group.attr("pointer-events", "none");
+    const group1 = group = svg.append("g").call(render, d);
 
     svg.transition()
         .duration(250)
